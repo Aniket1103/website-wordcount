@@ -1,0 +1,6 @@
+{
+    "version": 2,
+    "name": "website-wordcount",
+    "builds": [{ "src": "server/index.js", "use": "@vercel/node" }],
+    "routes": [{ "src": "/(.*)", "dest": "/server/index.js" }]
+  }
