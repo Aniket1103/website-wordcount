@@ -1,33 +1,43 @@
 import { useState } from 'react'
+// import 'dotenv/config'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
+  const [url, setUrl] = useState("")
   const [count, setCount] = useState(0)
+
+  const postInsightsEndpoint = (import.meta?.env?.VITE_PATH || `http://localhost:${import.meta?.env?.VITE_PORT || "4000"}`) + `/insights`;
+
+  async function handleSubmit(e){
+    e.preventDefault();
+    // console.log(import.meta.env)
+    if(url === "") return;
+    let data = await fetch(postInsightsEndpoint, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({url})
+    })
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <h1>Website Word Counter</h1>
+      <form onSubmit={handleSubmit} className="">
+        <input 
+          value={url}
+          placeholder="e.g. https://www.example.com" className="insights-input"
+          onChange={e => setUrl(e.target.value)}
+          type="text"
+        />
+        <button>
+          Get Insights
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      </form>
     </>
   )
 }
