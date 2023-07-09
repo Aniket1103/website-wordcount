@@ -1,9 +1,8 @@
 #root {
-  margin: 0;
   padding: 0;
   max-width: 1280px;
-  margin: 10rem auto;
-  padding: 2rem;
+  margin: 1rem auto;
+  padding: 0rem;
   text-align: center;
 }
 .input-error {
@@ -13,6 +12,7 @@
 }
 
 .form {
+  padding: 5rem 0rem;
   height: 10rem;
 }
 
@@ -23,12 +23,12 @@
   transform: translate(-0.6rem, -0.9rem);
 }
 .star:before {
- content: "\2605";
+ content: "\2606";
  position: relative;
  visibility: visible;
 }
 .star:checked:before {
- content: "\2606";
+ content: "\2605";
  position: relative;
 }
 .star:hover {

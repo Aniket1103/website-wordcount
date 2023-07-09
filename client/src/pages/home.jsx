@@ -8,8 +8,8 @@ function Home() {
   const navigateTo = useNavigate();
 
   const postInsightsEndpoint =
-    (import.meta?.env?.VITE_PATH ||
-      `http://localhost:${import.meta?.env?.VITE_PORT || "4000"}`) +
+    (import.meta.env.VITE_PATH ||
+      `http://localhost:${import.meta.env.VITE_PORT || "4000"}`) +
     `/insights`;
 
   function handleInput(e) {

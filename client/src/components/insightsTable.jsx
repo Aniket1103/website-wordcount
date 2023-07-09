@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
+import InsightRow from "./insightRow";
 
 function InsightsTable() {
   const [insights, setInsights] = useState([]);
-  const [favoriteInsights, setFavoriteInsights] = useState([]);
 
   const insightsEndpoint =
-    (import.meta?.env?.VITE_PATH ||
-      `http://localhost:${import.meta?.env?.VITE_PORT || "4000"}`) +
+    (import.meta.env.VITE_PATH ||
+      `http://localhost:${import.meta.env.VITE_PORT || "4000"}`) +
     `/insights`;
 
   useEffect(() => {
@@ -22,12 +22,14 @@ function InsightsTable() {
   }, []);
 
 
-  const handleMarkFavorite = (insightId, isFav) => {
+  const handleFavorite = (insightId, isFav, setFav) => {
+    setFav(isFav);
     fetch(insightsEndpoint + `/${insightId}`, {
       method : "PATCH",
-      json : {
-        favourite : isFav
-      }
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ favourite: isFav }),
     })
     .then(response => response.json())
     .then((body) => {
@@ -37,7 +39,6 @@ function InsightsTable() {
       for(const insight of updatedInsights){
         if(insight.id === id){
           insight.favourite = favourite;
-          // return setInsights(updatedInsights);
           break;
         }
       }
@@ -48,13 +49,23 @@ function InsightsTable() {
   };
 
   const handleRemoveInsight = (insightId) => {
-    // Remove the insight from the insights list
-    const updatedInsights = insights.filter(
-      (insight) => insight.id !== insightId
-    );
-    setFavoriteInsights(favoriteInsights.filter((id) => id !== insightId));
-    setInsights(updatedInsights);
+    fetch(insightsEndpoint + `/${insightId}`, {
+      method : "DELETE",
+    })
+    .then(async response => {
+      if(response.ok){
+        const updatedInsights = insights.filter(
+          (insight) => insight.id !== insightId
+        );
+        setInsights(updatedInsights);
+      }
+      return response.json()
+    })
+    .catch(error => {
+      console.log(error);
+    })
   };
+
   return (
     <>
       <table>
@@ -68,34 +79,12 @@ function InsightsTable() {
         </thead>
         <tbody>
           {insights.map((insight) => (
-            <tr key={insight.id}>
-              <td className="table-cell">{insight.domain}</td>
-              <td className="table-cell">{insight.wordCount}</td>
-              <td className="table-cell">
-                {
-                  /* <button
-                onClick={() => handleMarkFavorite(insight.id)}
-                className={favoriteInsights.includes(insight.id) ? 'favorite' : ''}
-              >
-                Mark Favorite
-              </button> */
-                  <input
-                    onChange={(e) => handleMarkFavorite(id, e.target.checked)}
-                    class="star"
-                    type="checkbox"
-                    title="mark favourite"
-                  />
-                }
-              </td>
-              <td className="table-cell">
-                <button
-                  className="remove"
-                  onClick={() => handleRemoveInsight(insight.id)}
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
+            <InsightRow 
+              {...insight}
+              key={insight.id}
+              handleFavorite={handleFavorite}
+              handleRemoveInsight={handleRemoveInsight}
+            />
           ))}
         </tbody>
       </table>
