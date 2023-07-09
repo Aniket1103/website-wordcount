@@ -31,16 +31,28 @@ a:hover {
 }
 
 body {
-  margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
+  /* display: absolute;
+  top: 0;
+  left: 0; */
+  height : 3rem;
+  /* width: 100%; */
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+th {
+  padding : 1rem 2rem;
+  margin: 0rem;
+  border: #81f1ed solid 2px;
+}
+
+td{
+  padding: 1rem 3rem;
+  border: #81dcf1 solid 1px;
 }
 
 button {
@@ -57,6 +69,10 @@ button {
 }
 button:hover {
   border-color: #3cd6cc;
+}
+
+.remove:hover {
+  color: #3cd6cc;
 }
 button:focus,
 button:focus-visible {
